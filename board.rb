@@ -22,6 +22,20 @@ class Board
     nil
   end
 
+  def capture_at(pos)
+    return if self[pos].nil?
+
+    captured_piece = self[pos]
+    @captured_pieces[captured_piece.color] << captured_piece
+    captured_piece.pos = nil
+  end
+
+  def checkmate?(color)
+    return false unless in_check?(color)
+    remaining_pieces.select { |piece| piece.color == color }
+                    .all? { |piece| piece.valid_moves.empty? }
+  end
+
   def deep_dup
     new_board = Board.new
     remaining_pieces.each do |piece|
@@ -43,15 +57,25 @@ class Board
   def move(start, move_to)
     piece = self[start]
     raise ArgumentError.new "Invalid Start Position" if piece.nil?
-    if piece.moves.include?(move_to)
-      @captured_pieces[piece.color] << self[move_to] if self[move_to]
-      self[start] = nil
-      self[move_to] = piece
-      piece.pos = move_to
-      piece.moved = true
-    else
+    unless piece.moves.include?(move_to)
       raise RuntimeError.new "Illegal Move"
     end
+    if piece.move_into_check?(move_to)
+      raise RuntimeError.new "Can't Move into Check"
+    end
+
+    move!(start, move_to)
+  end
+
+  def move!(start, move_to)
+    piece = self[start]
+    raise ArgumentError.new "Invalid Start Position" if piece.nil?
+
+    capture_at(move_to)
+    self[start] = nil
+    self[move_to] = piece
+    piece.pos = move_to
+    piece.moved = true
   end
 
   def in_check?(color)
@@ -79,7 +103,7 @@ class Board
 
   def place_starting_pieces
     place_by_color(STARTING_POSITIONS, :white)
-    place_by_color(STARTING_POSITIONS.reverse, :black)
+    place_by_color(STARTING_POSITIONS, :black)
   end
 
   def in_bounds?(pos)
@@ -108,10 +132,10 @@ class Board
     @grid[y][x] = contents
   end
 
-  protected
+  #protected
   attr_accessor :pieces, :captured_pieces
 
-  private
+  #private
   def place_new_piece(pos, piece, color)
     self[pos] = Piece.send(piece, self, pos, color)
     @pieces << self[pos]
