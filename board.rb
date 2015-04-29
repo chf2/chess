@@ -21,6 +21,43 @@ class Board
       white: []
     }
     @pieces = []
+
+  end
+
+  def capture_at(pos)
+    return if self[pos].nil?
+
+    captured_piece = self[pos]
+    @captured_pieces[captured_piece.color] << captured_piece
+    captured_piece.pos = nil
+  end
+
+
+  def castle(color)
+    raise IllegalMoveError.new "Can't castle" unless castle_eligible?(color)
+
+    y = (color == :white) ? 7 : 0
+    move!([y,4], [y, 6])
+    move!([y,7], [y, 5])
+  end
+
+  def castle_eligible?(color)
+    return false if in_check?(color)
+    king = remaining_pieces.find do |piece|
+      piece.color == color && piece.is_a?(King)
+    end
+    y = (color == :white) ? 7 : 0
+    rook = self[[y,7]]
+    return false if rook.nil? || rook.moved? || king.moved?
+    intervening = [[y,5],[y,6]]
+    intervening.none? { |pos| self[pos] || pos_in_check?(color, pos) }
+  end
+
+  def check_pawn_promotion
+    back_lines = @grid[0] + @grid[7]
+    pawns = back_lines.select { |piece| piece.is_a?(Pawn) }
+    return nil if pawns.empty?
+    pawns
   end
 
   def checkmate?(color)
@@ -83,11 +120,14 @@ class Board
     king = remaining_pieces.find do |piece|
       piece.color == color && piece.is_a?(King)
     end
+    pos_in_check?(color, king.pos)
+  end
+
+  def pos_in_check?(color, pos)
     remaining_pieces.each do |piece|
       next if piece.color == color
-      return true if piece.moves.include?(king.pos)
+      return true if piece.moves.include?(pos)
     end
-
     false
   end
 
@@ -162,14 +202,6 @@ class Board
 
   private
 
-  def capture_at(pos)
-    return if self[pos].nil?
-
-    captured_piece = self[pos]
-    @captured_pieces[captured_piece.color] << captured_piece
-    captured_piece.pos = nil
-  end
-
   def place_by_color(positions, color)
     row = color == :white ?  7 : 0
     positions.each_with_index do |piece, col|
@@ -184,5 +216,4 @@ class Board
   def remaining_pieces
     @pieces - @captured_pieces[:black] - @captured_pieces[:white]
   end
-
 end

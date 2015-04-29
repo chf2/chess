@@ -65,4 +65,8 @@ class Piece
     color == :white
   end
 
+  def moved?
+    moved
+  end
+
 end

@@ -2,6 +2,7 @@ class CoordsPlayer < Player
 
   private
   def get_move(board)
+    puts "It's #{@color}'s turn"
     puts "Make a move (for example, 'f2, f4')"
     move = gets.chomp
     unless move =~ /\A[a-h][1-8], [a-h][1-8]\Z/
