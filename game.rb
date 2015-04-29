@@ -56,5 +56,5 @@ class ChessGame
   end
 end
 
-game = ChessGame.new(Player.new, Player.new)
+game = ChessGame.new(Player.new(:white), Player.new(:black))
 game.play

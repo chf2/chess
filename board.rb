@@ -12,6 +12,8 @@ class Board
                 'h' => 7
   }
 
+  attr_accessor :cursor, :cursor_display_piece
+
   def initialize
     @grid = Array.new(8) {Array.new(8)}
     @captured_pieces = {
@@ -37,7 +39,9 @@ class Board
       print " #{8-row_idx}  "
       row.each_with_index do |piece, col_idx|
         render = " "
-        if piece.nil?
+        if @cursor_display_piece && cursor == [row_idx, col_idx]
+          render += @cursor_display_piece.colorize(:blue)
+        elsif piece.nil?
           render += " "
         elsif piece.color == :black
           render += piece.display.colorize(:red)
@@ -46,6 +50,7 @@ class Board
         end
         render += "  "
         background = (row_idx+col_idx).even? ? :light_cyan : :black
+        background = :light_green if @cursor == [row_idx, col_idx]
         print render.colorize(:background => background)
       end
       print "  #{8-row_idx}"
@@ -142,6 +147,7 @@ class Board
   end
 
   def [](pos)
+    return nil unless in_bounds?(pos)
     y, x = pos
     @grid[y][x]
   end
