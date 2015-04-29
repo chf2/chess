@@ -8,7 +8,7 @@ class Pawn < Piece
 
   def initialize(board, pos, color)
     super
-    @display = white? ? "♙" : "♟"
+    @display = "♙" 
   end
 
 

@@ -11,6 +11,7 @@ class ChessGame
   end
 
   def find_winner
+    @board.display
     if @board.checkmate?(:white)
       puts "Black wins!"
     elsif @board.checkmate?(:black)

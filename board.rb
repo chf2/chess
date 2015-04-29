@@ -32,22 +32,26 @@ class Board
   end
 
   def display
+    puts "     a   b   c   d   e   f   g   h"
     @grid.each_with_index do |row, row_idx|
+      print " #{8-row_idx}  "
       row.each_with_index do |piece, col_idx|
         render = " "
         if piece.nil?
           render += " "
         elsif piece.color == :black
-          render += piece.display
+          render += piece.display.colorize(:red)
         else
           render += piece.display
         end
-        render += " "
-        background = (row_idx+col_idx).even? ? :light_cyan : :light_magenta
+        render += "  "
+        background = (row_idx+col_idx).even? ? :light_cyan : :black
         print render.colorize(:background => background)
       end
+      print "  #{8-row_idx}"
       print "\n"
     end
+    puts "     a   b   c   d   e   f   g   h"
 
     nil
   end

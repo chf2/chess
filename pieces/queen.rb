@@ -12,7 +12,7 @@ class Queen < SlidingPiece
 
   def initialize(board, pos, color)
     super
-    @display = white? ? "♕" : "♛"
+    @display = "♕"
   end
 
   def get_directions
