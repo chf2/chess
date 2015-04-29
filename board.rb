@@ -1,6 +1,17 @@
 class Board
   STARTING_POSITIONS = [:rook, :knight, :bishop, :queen, :king, :bishop,
                           :knight, :rook]
+  COORDS_MAP = {
+                'a' => 0,
+                'b' => 1,
+                'c' => 2,
+                'd' => 3,
+                'e' => 4,
+                'f' => 5,
+                'g' => 6,
+                'h' => 7
+  }
+
   def initialize
     @grid = Array.new(8) {Array.new(8)}
     @captured_pieces = {
@@ -12,6 +23,10 @@ class Board
 
   def checkmate?(color)
     return false unless in_check?(color)
+    mate?(color)
+  end
+
+  def mate?(color)
     remaining_pieces.select { |piece| piece.color == color }
                     .all? { |piece| piece.valid_moves.empty? }
   end
@@ -76,6 +91,13 @@ class Board
     self[move_to] = piece
     piece.pos = move_to
     piece.moved = true
+  end
+
+  def parse(chess_coord)
+    x, y = chess_coord.split('')
+    x_coord = COORDS_MAP[x]
+    y_coord = 8 - Integer(y)
+    [y_coord, x_coord]
   end
 
   def place_new_piece(pos, piece, color)
