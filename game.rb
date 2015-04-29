@@ -1,5 +1,5 @@
 require_relative "chess_loader.rb"
-require_relative "player.rb"
+require_relative "players/player.rb"
 require_relative "board.rb"
 require 'colorize'
 
@@ -32,6 +32,7 @@ class ChessGame
   def play
     @turn = :white
     until over?
+      system "clear"
       @board.display
       take_turn
       @turn = next_turn
@@ -40,11 +41,8 @@ class ChessGame
   end
 
   def take_turn
-    if @turn == :white
-      move = @white_p.get_input(@board.deep_dup, @turn)
-    else
-      move = @black_p.get_input(@board.deep_dup, @turn)
-    end
+    current_player = (@turn == :white ? @white_p : @black_p)
+    move = current_player.get_input(@board.deep_dup, @turn)
     unless @board.is_same_color?(move[0], @turn)
       raise IllegalMoveError.new "There's no #{@turn} piece there!"
     end
@@ -56,5 +54,5 @@ class ChessGame
   end
 end
 
-game = ChessGame.new(Player.new(:white), Player.new(:black))
+game = ChessGame.new(CursorPlayer.new(:white), CoordsPlayer.new(:black))
 game.play
