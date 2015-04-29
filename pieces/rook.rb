@@ -8,7 +8,7 @@ class Rook < SlidingPiece
 
   def initialize(board, pos, color)
     super
-    @display = "r"
+    @display = white? ? "♖" : "♜"
   end
 
   def get_directions

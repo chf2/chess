@@ -8,7 +8,7 @@ class Bishop < SlidingPiece
 
   def initialize(board, pos, color)
     super
-    @display = "b"
+    @display = white? ? "♗" : "♝"
   end
 
   def get_directions

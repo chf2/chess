@@ -11,7 +11,7 @@ class King < SteppingPiece
           ]
   def initialize(board, pos, color)
     super
-    @display = "K"
+    @display = white? ? "♔" : "♚"
   end
 
   def get_steps

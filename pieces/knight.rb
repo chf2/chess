@@ -12,7 +12,7 @@ class Knight < SteppingPiece
 
   def initialize(board, pos, color)
     super
-    @display = "k"
+    @display = white? ? "♘" : "♞"
   end
 
   def get_steps

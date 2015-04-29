@@ -32,8 +32,21 @@ class Board
   end
 
   def display
-    @grid.each do |row|
-      p row.map { |piece| piece.display if piece }
+    @grid.each_with_index do |row, row_idx|
+      row.each_with_index do |piece, col_idx|
+        render = " "
+        if piece.nil?
+          render += " "
+        elsif piece.color == :black
+          render += piece.display
+        else
+          render += piece.display
+        end
+        render += " "
+        background = (row_idx+col_idx).even? ? :light_cyan : :light_magenta
+        print render.colorize(:background => background)
+      end
+      print "\n"
     end
 
     nil
@@ -69,14 +82,28 @@ class Board
     false
   end
 
+  def in_bounds?(pos)
+    pos.all? { |coord| coord.between?(0,7) }
+  end
+
+  def is_opponent?(pos, color)
+    self[pos] && self[pos].color != color
+  end
+
+  def is_same_color?(pos, color)
+    self[pos] && self[pos].color == color
+  end
+
   def move(start, move_to)
     piece = self[start]
-    raise ArgumentError.new "Invalid Start Position" if piece.nil?
+    unless in_bounds?(start)
+      raise IllegalMoveError.new "Location not on board"
+    end
     unless piece.moves.include?(move_to)
-      raise RuntimeError.new "Illegal Move"
+      raise IllegalMoveError.new "Illegal Move"
     end
     if piece.move_into_check?(move_to)
-      raise RuntimeError.new "Can't Move into Check"
+      raise IllegalMoveError.new "Can't Move into Check"
     end
 
     move!(start, move_to)
@@ -105,16 +132,9 @@ class Board
     @pieces << self[pos]
   end
 
-  def in_bounds?(pos)
-    pos.all? { |coord| coord.between?(0,7) }
-  end
-
-  def is_opponent?(pos, color)
-    self[pos] && self[pos].color != color
-  end
-
-  def is_same_color?(pos, color)
-    self[pos] && self[pos].color == color
+  def place_starting_pieces
+    place_by_color(STARTING_POSITIONS, :white)
+    place_by_color(STARTING_POSITIONS, :black)
   end
 
   def [](pos)
@@ -127,10 +147,10 @@ class Board
     @grid[y][x] = contents
   end
 
-  #protected
+  protected
   attr_accessor :pieces, :captured_pieces
 
-  #private
+  private
 
   def capture_at(pos)
     return if self[pos].nil?
@@ -149,11 +169,6 @@ class Board
     (0..7).each do |col|
       place_new_piece([row, col], :pawn, color)
     end
-  end
-
-  def place_starting_pieces
-    place_by_color(STARTING_POSITIONS, :white)
-    place_by_color(STARTING_POSITIONS, :black)
   end
 
   def remaining_pieces
