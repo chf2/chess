@@ -12,7 +12,7 @@ class Board
                 'h' => 7
   }
 
-  attr_accessor :cursor, :cursor_display_piece
+  attr_accessor :cursor, :cursor_display_piece, :last_move
 
   def initialize
     @grid = Array.new(8) {Array.new(8)}
@@ -21,6 +21,7 @@ class Board
       white: []
     }
     @pieces = []
+    @last_move = []
 
   end
 
@@ -113,6 +114,8 @@ class Board
       end
     end
 
+    new_board.last_move = @last_move.dup
+
     new_board
   end
 
@@ -167,6 +170,7 @@ class Board
     self[move_to] = piece
     piece.pos = move_to
     piece.moved = true
+    @last_move = [start, move_to].dup
   end
 
   def parse(chess_coord)
@@ -186,6 +190,10 @@ class Board
     place_by_color(STARTING_POSITIONS, :black)
   end
 
+  def remaining_pieces
+    @pieces - @captured_pieces[:black] - @captured_pieces[:white]
+  end
+
   def [](pos)
     return nil unless in_bounds?(pos)
     y, x = pos
@@ -196,6 +204,7 @@ class Board
     y, x = pos
     @grid[y][x] = contents
   end
+
 
   protected
   attr_accessor :pieces, :captured_pieces
@@ -211,9 +220,5 @@ class Board
     (0..7).each do |col|
       place_new_piece([row, col], :pawn, color)
     end
-  end
-
-  def remaining_pieces
-    @pieces - @captured_pieces[:black] - @captured_pieces[:white]
   end
 end

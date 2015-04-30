@@ -90,7 +90,7 @@ if __FILE__ == $PROGRAM_NAME
   if answer == 'y' && File.exist?('save.yml')
     ChessGame.load
   else
-    game = ChessGame.new(CursorPlayer.new(:white), CursorPlayer.new(:black))
+    game = ChessGame.new(CursorPlayer.new(:white), AIPlayer.new(:black))
     game.play
   end
 end

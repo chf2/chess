@@ -33,25 +33,46 @@ board: &1 !ruby/object:Board
       board: *1
       moved: false
       display: "♕"
-    - 
-    - &25 !ruby/object:Rook
+    - &22 !ruby/object:King
+      color: :black
+      pos:
+      - 0
+      - 4
+      board: *1
+      moved: false
+      display: "♔"
+    - &23 !ruby/object:Bishop
       color: :black
       pos:
       - 0
       - 5
       board: *1
-      moved: true
-      display: "♖"
-    - &22 !ruby/object:King
+      moved: false
+      display: "♗"
+    - &24 !ruby/object:Knight
       color: :black
       pos:
       - 0
       - 6
       board: *1
-      moved: true
-      display: "♔"
-    - 
-  - - 
+      moved: false
+      display: "♘"
+    - &25 !ruby/object:Rook
+      color: :black
+      pos:
+      - 0
+      - 7
+      board: *1
+      moved: false
+      display: "♖"
+  - - &26 !ruby/object:Pawn
+      color: :black
+      pos:
+      - 1
+      - 0
+      board: *1
+      moved: false
+      display: "♙"
     - &27 !ruby/object:Pawn
       color: :black
       pos:
@@ -76,14 +97,14 @@ board: &1 !ruby/object:Board
       board: *1
       moved: false
       display: "♙"
-    - &23 !ruby/object:Bishop
+    - &30 !ruby/object:Pawn
       color: :black
       pos:
       - 1
       - 4
       board: *1
-      moved: true
-      display: "♗"
+      moved: false
+      display: "♙"
     - &31 !ruby/object:Pawn
       color: :black
       pos:
@@ -112,58 +133,7 @@ board: &1 !ruby/object:Board
     - 
     - 
     - 
-    - &30 !ruby/object:Pawn
-      color: :black
-      pos:
-      - 2
-      - 4
-      board: *1
-      moved: true
-      display: "♙"
     - 
-    - 
-    - 
-  - - &26 !ruby/object:Pawn
-      color: :black
-      pos:
-      - 3
-      - 0
-      board: *1
-      moved: true
-      display: "♙"
-    - 
-    - 
-    - 
-    - 
-    - 
-    - 
-    - &24 !ruby/object:Knight
-      color: :black
-      pos:
-      - 3
-      - 7
-      board: *1
-      moved: true
-      display: "♘"
-  - - 
-    - 
-    - &7 !ruby/object:Bishop
-      color: :white
-      pos:
-      - 4
-      - 2
-      board: *1
-      moved: true
-      display: "♗"
-    - 
-    - &14 !ruby/object:Pawn
-      color: :white
-      pos:
-      - 4
-      - 4
-      board: *1
-      moved: true
-      display: "♙"
     - 
     - 
     - 
@@ -172,14 +142,30 @@ board: &1 !ruby/object:Board
     - 
     - 
     - 
-    - &8 !ruby/object:Knight
+    - 
+    - 
+    - 
+  - - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+  - - 
+    - 
+    - &3 !ruby/object:Knight
       color: :white
-      pos:
+      pos: &34
       - 5
-      - 5
+      - 2
       board: *1
       moved: true
       display: "♘"
+    - 
+    - 
+    - 
     - 
     - 
   - - &10 !ruby/object:Pawn
@@ -214,7 +200,14 @@ board: &1 !ruby/object:Board
       board: *1
       moved: false
       display: "♙"
-    - 
+    - &14 !ruby/object:Pawn
+      color: :white
+      pos:
+      - 6
+      - 4
+      board: *1
+      moved: false
+      display: "♙"
     - &15 !ruby/object:Pawn
       color: :white
       pos:
@@ -247,14 +240,7 @@ board: &1 !ruby/object:Board
       board: *1
       moved: false
       display: "♖"
-    - &3 !ruby/object:Knight
-      color: :white
-      pos:
-      - 7
-      - 1
-      board: *1
-      moved: false
-      display: "♘"
+    - 
     - &4 !ruby/object:Bishop
       color: :white
       pos:
@@ -279,15 +265,29 @@ board: &1 !ruby/object:Board
       board: *1
       moved: false
       display: "♔"
-    - 
-    - 
+    - &7 !ruby/object:Bishop
+      color: :white
+      pos:
+      - 7
+      - 5
+      board: *1
+      moved: false
+      display: "♗"
+    - &8 !ruby/object:Knight
+      color: :white
+      pos:
+      - 7
+      - 6
+      board: *1
+      moved: false
+      display: "♘"
     - &9 !ruby/object:Rook
       color: :white
       pos:
       - 7
       - 7
       board: *1
-      moved: true
+      moved: false
       display: "♖"
   captured_pieces:
     :black: []
@@ -325,8 +325,12 @@ board: &1 !ruby/object:Board
   - *31
   - *32
   - *33
+  last_move:
+  - - 7
+    - 1
+  - *34
 white_p: !ruby/object:CursorPlayer
   color: :white
 black_p: !ruby/object:CursorPlayer
   color: :black
-turn: :white
+turn: :black
